@@ -16,6 +16,7 @@ import { ScrollDirectionProvider } from 'lib/contexts/scrollDirection';
 import { growthBook } from 'lib/growthbook/init';
 import useLoadFeatures from 'lib/growthbook/useLoadFeatures';
 import useNotifyOnNavigation from 'lib/hooks/useNotifyOnNavigation';
+import UserIdentifier from 'lib/multibase/UserIdentifier';
 import { SocketProvider } from 'lib/socket/context';
 import theme from 'theme';
 import AppErrorBoundary from 'ui/shared/AppError/AppErrorBoundary';
@@ -73,6 +74,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
               </GrowthBookProvider>
               <ReactQueryDevtools buttonPosition="bottom-left" position="left"/>
               <GoogleAnalytics/>
+              <UserIdentifier/>
             </QueryClientProvider>
           </AppContextProvider>
         </Web3ModalProvider>

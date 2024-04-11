@@ -39,6 +39,7 @@ Please be aware that all environment variables prefixed with `NEXT_PUBLIC_` will
   - [Export data to CSV file](ENVS.md#export-data-to-csv-file)
   - [Google analytics](ENVS.md#google-analytics)
   - [Mixpanel analytics](ENVS.md#mixpanel-analytics)
+  - [Multibase analytics](ENVS.md#multibase-analytics)
   - [GrowthBook feature flagging and A/B testing](ENVS.md#growthbook-feature-flagging-and-ab-testing)
   - [GraphQL API documentation](ENVS.md#graphql-api-documentation)
   - [REST API documentation](ENVS.md#rest-api-documentation)
@@ -410,6 +411,14 @@ This feature is **enabled by default** with the `coinzilla` ads provider. To swi
 | Variable | Type| Description | Compulsoriness  | Default value | Example value |
 | --- | --- | --- | --- | --- | --- |
 | NEXT_PUBLIC_MIXPANEL_PROJECT_TOKEN | `string` | Project token for [Mixpanel](https://mixpanel.com/) analytics service | true | - | `<your-secret>` |
+
+&nbsp;
+
+### Multibase analytics
+
+| Variable | Type| Description | Compulsoriness  | Default value | Example value |
+| --- | --- | --- | --- | --- | --- |
+| NEXT_PUBLIC_MULTIBASE_API_KEY | `string` | Project token for [Multibase](https://www.multibase.co/) analytics service | true | - | `<your-secret>` |
 
 &nbsp;
 

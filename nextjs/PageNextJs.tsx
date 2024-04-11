@@ -7,6 +7,7 @@ import useAdblockDetect from 'lib/hooks/useAdblockDetect';
 import useGetCsrfToken from 'lib/hooks/useGetCsrfToken';
 import * as metadata from 'lib/metadata';
 import * as mixpanel from 'lib/mixpanel';
+import * as multibase from 'lib/multibase';
 import { init as initSentry } from 'lib/sentry/config';
 
 type Props = Route & {
@@ -23,6 +24,9 @@ const PageNextJs = (props: Props) => {
 
   const isMixpanelInited = mixpanel.useInit();
   mixpanel.useLogPageView(isMixpanelInited);
+
+  const isMultiBaseInited = multibase.useInit();
+  multibase.useLogPageView(isMultiBaseInited);
 
   return (
     <>

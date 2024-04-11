@@ -6,6 +6,7 @@ export { googleFonts } from './googleFonts';
 export { googleReCaptcha } from './googleReCaptcha';
 export { growthBook } from './growthBook';
 export { mixpanel } from './mixpanel';
+export { multibase } from './multibase';
 export { monaco } from './monaco';
 export { safe } from './safe';
 export { sentry } from './sentry';
