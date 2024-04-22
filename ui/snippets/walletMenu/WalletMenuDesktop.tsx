@@ -16,6 +16,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
+import { useSignMessage } from 'wagmi'
 
 // eslint-disable-next-line no-restricted-imports
 import BitgetLogo from 'icons/wallets/Bitget.svg'
@@ -48,12 +49,91 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
 
   const [showConnect, setShowConnect] = useState(false)
 
+  const { signMessage } = useSignMessage()
+  // const { address } = useAccount()
+
+  const DAPP_ID = '646da224e530a70013d94d8f'
+  const NUVO_API = 'https://api.staging.nuvosphere.io'
+  const RETURN_URL = 'http://127.0.0.1:3000'
+  const sign = React.useCallback(
+    (message: string) => {
+      signMessage(
+        { message },
+        {
+          onSuccess: (sig) => {
+            fetch(NUVO_API + '/api/v1/oauth2/wallet/get_code', {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({
+                address: address,
+                signature: sig,
+                wallet_type: 'BITGET',
+                return_url: RETURN_URL,
+                app_id: DAPP_ID,
+              }),
+            })
+              .then((response) => response.json())
+              .then((res) => {
+                console.log('wallet_get_code', res)
+              })
+              .catch((err) => console.error(err))
+          },
+          onError: (error) => {
+            console.error({
+              type: 'SIGNING_FAIL',
+              message: (error as Error)?.message || 'Oops! Something went wrong',
+            })
+          },
+        },
+      )
+    },
+    [signMessage, address],
+  )
+
+  const putNuvo = React.useCallback(() => {
+    const walletId = localStorage['wagmi.recentConnectorId']
+    if (walletId !== `"com.bitget.web3"`) {
+      return
+    }
+
+    fetch(NUVO_API + '/api/v1/oauth2/wallet/nonce', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        address: address,
+        type: 'BITGET',
+        app_id: DAPP_ID,
+      }),
+    })
+      .then(
+        (response) =>
+          response.json() as unknown as {
+            data: {
+              msg: string
+            }
+          },
+      )
+      .then((res) => {
+        if (res?.data?.msg) {
+          const message = res.data.msg
+          sign(message)
+        }
+      })
+      .catch((err) => console.error(err))
+  }, [sign, address])
+
   const variant = React.useMemo(() => {
     if (isWalletConnected) {
+      if (showConnect) {
+        putNuvo()
+        setShowConnect(false)
+      }
       return 'subtle'
     }
     return isHomePage ? 'solid' : 'outline'
-  }, [isWalletConnected, isHomePage])
+  }, [isWalletConnected, isHomePage, showConnect, putNuvo])
 
   let buttonStyles: Partial<ButtonProps> = {}
   if (isWalletConnected) {

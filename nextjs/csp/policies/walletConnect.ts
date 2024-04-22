@@ -11,14 +11,12 @@ export function walletConnect(): CspDev.DirectiveDescriptor {
 
   return {
     'connect-src': [
+      '*.nuvosphere.io',
       '*.web3modal.com',
       '*.walletconnect.com',
       'wss://relay.walletconnect.com',
       'wss://www.walletlink.org',
     ],
-    'img-src': [
-      KEY_WORDS.BLOB,
-      '*.walletconnect.com',
-    ],
-  };
+    'img-src': [KEY_WORDS.BLOB, '*.walletconnect.com'],
+  }
 }
