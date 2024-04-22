@@ -46,7 +46,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   const [isPopoverOpen, setIsPopoverOpen] = useBoolean(false)
   const isMobile = useIsMobile()
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [showConnect, setShowConnect] = useState(false)
 
   const variant = React.useMemo(() => {
     if (isWalletConnected) {
@@ -86,7 +86,6 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
     if (!provider) {
       window.open('https://web3.bitget.com/zh-CN/wallet-download?type=2')
     }
-
     connect()
   }, [connect])
 
@@ -120,7 +119,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
                 isLoading={isModalOpening}
                 loadingText="Connect wallet"
                 onClick={() => {
-                  setIsOpen(true)
+                  isWalletConnected ? openPopover() : setShowConnect(true)
                 }}
                 fontSize="sm"
                 {...buttonStyles}
@@ -149,16 +148,18 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
       </Popover>
       {/* eslint-disable-next-line react/jsx-no-bind */}
       <Modal
-        isOpen={isOpen}
+        isOpen={showConnect}
         onClose={() => {
-          setIsOpen(false)
+          setShowConnect(false)
         }}
         size={{ base: 'full', lg: 'sm' }}
       >
         <ModalOverlay zIndex="100" />
-        <ModalContent containerProps={{
-          zIndex: '101',
-        }} >
+        <ModalContent
+          containerProps={{
+            zIndex: '101',
+          }}
+        >
           <ModalHeader>Connect Wallet</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
