@@ -195,7 +195,7 @@ module.exports = {
     'space-in-parens': [ 'error', 'never' ],
     'space-infix-ops': 'error',
     'space-unary-ops': 'off',
-    'template-curly-spacing': [ 'error', 'always' ],
+    // 'template-curly-spacing': [ 'error', 'always' ],
     'wrap-iife': [ 'error', 'inside' ],
     // semi: [ 'error', 'always' ],
 

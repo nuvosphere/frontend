@@ -90,6 +90,16 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
     connect()
   }, [connect])
 
+  const connectNuvo = React.useCallback(() => {
+    const VITE_OAUTH_URL = 'https://oauth.staging.nuvosphere.io'
+    const VITE_DAPP_ID = '646da224e530a70013d94d8f'
+
+    const returnUrl = encodeURIComponent(location.href)
+    const switchAccount = true
+    const loginUrl = `${VITE_OAUTH_URL}/#/oauth2-login?switch_account=${switchAccount}&app_id=${VITE_DAPP_ID}&return_url=${returnUrl}`
+    location.href = loginUrl
+  }, [])
+
   return (
     <>
       <Popover
@@ -145,13 +155,16 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
         }}
         size={{ base: 'full', lg: 'sm' }}
       >
-        <ModalOverlay />
-        <ModalContent>
+        <ModalOverlay zIndex="100" />
+        <ModalContent containerProps={{
+          zIndex: '101',
+        }} >
           <ModalHeader>Connect Wallet</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {/* eslint-disable-next-line react/jsx-no-bind */}
             <Box
+              onClick={connectNuvo}
               cursor="pointer"
               borderRadius="12px"
               border="1px"
