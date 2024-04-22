@@ -1,43 +1,61 @@
-import type { ButtonProps } from '@chakra-ui/react';
-import { Icon, Popover, PopoverContent, PopoverBody,
-  PopoverTrigger, Button, Box, useBoolean, Modal, ModalBody,
-  ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react';
-import React from 'react';
+import type { ButtonProps } from '@chakra-ui/react'
+import {
+  Icon,
+  Popover,
+  PopoverContent,
+  PopoverBody,
+  PopoverTrigger,
+  Button,
+  Box,
+  useBoolean,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+} from '@chakra-ui/react'
+import React, { useState } from 'react'
 
 // eslint-disable-next-line no-restricted-imports
-import BitgetLogo from 'icons/wallets/Bitget.svg';
+import BitgetLogo from 'icons/wallets/Bitget.svg'
 // eslint-disable-next-line no-restricted-imports
-import NuvoLogo from 'icons/wallets/Nuvo.svg';
+import NuvoLogo from 'icons/wallets/Nuvo.svg'
 // eslint-disable-next-line no-restricted-imports
-import WalletConnectLogo from 'icons/wallets/WalletConnect.svg';
-import useIsMobile from 'lib/hooks/useIsMobile';
-import * as mixpanel from 'lib/mixpanel/index';
-import AddressIdenticon from 'ui/shared/entities/address/AddressIdenticon';
-import HashStringShorten from 'ui/shared/HashStringShorten';
-import useWallet from 'ui/snippets/walletMenu/useWallet';
-import WalletMenuContent from 'ui/snippets/walletMenu/WalletMenuContent';
+import WalletConnectLogo from 'icons/wallets/WalletConnect.svg'
+import useIsMobile from 'lib/hooks/useIsMobile'
+import * as mixpanel from 'lib/mixpanel/index'
+import AddressIdenticon from 'ui/shared/entities/address/AddressIdenticon'
+import HashStringShorten from 'ui/shared/HashStringShorten'
+import useWallet from 'ui/snippets/walletMenu/useWallet'
+import WalletMenuContent from 'ui/snippets/walletMenu/WalletMenuContent'
 
-import useMenuButtonColors from '../useMenuButtonColors';
-import WalletTooltip from './WalletTooltip';
+import useMenuButtonColors from '../useMenuButtonColors'
+import WalletTooltip from './WalletTooltip'
 
 type Props = {
-  isHomePage?: boolean;
-};
+  isHomePage?: boolean
+}
 
 const WalletMenuDesktop = ({ isHomePage }: Props) => {
-  const { isWalletConnected, address, connect, disconnect, isModalOpening, isModalOpen, setIsOpen } = useWallet({ source: 'Header' });
-  const { themedBackground, themedBorderColor, themedColor } = useMenuButtonColors();
-  const [ isPopoverOpen, setIsPopoverOpen ] = useBoolean(false);
-  const isMobile = useIsMobile();
+  // isModalOpen
+  const { isWalletConnected, address, connect, disconnect, isModalOpening } = useWallet({
+    source: 'Header',
+  })
+  const { themedBackground, themedBorderColor, themedColor } = useMenuButtonColors()
+  const [isPopoverOpen, setIsPopoverOpen] = useBoolean(false)
+  const isMobile = useIsMobile()
+
+  const [isOpen, setIsOpen] = useState(false)
 
   const variant = React.useMemo(() => {
     if (isWalletConnected) {
-      return 'subtle';
+      return 'subtle'
     }
-    return isHomePage ? 'solid' : 'outline';
-  }, [ isWalletConnected, isHomePage ]);
+    return isHomePage ? 'solid' : 'outline'
+  }, [isWalletConnected, isHomePage])
 
-  let buttonStyles: Partial<ButtonProps> = {};
+  let buttonStyles: Partial<ButtonProps> = {}
   if (isWalletConnected) {
     buttonStyles = {
       bg: isHomePage ? 'blue.50' : themedBackground,
@@ -45,97 +63,154 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
       _hover: {
         color: isHomePage ? 'blackAlpha.800' : themedColor,
       },
-    };
+    }
   } else if (isHomePage) {
     buttonStyles = {
       color: 'white',
-    };
+    }
   } else {
     buttonStyles = {
       borderColor: themedBorderColor,
       color: themedColor,
-    };
+    }
   }
 
   const openPopover = React.useCallback(() => {
-    mixpanel.logEvent(mixpanel.EventTypes.WALLET_ACTION, { Action: 'Open' });
-    setIsPopoverOpen.on();
-  }, [ setIsPopoverOpen ]);
+    mixpanel.logEvent(mixpanel.EventTypes.WALLET_ACTION, { Action: 'Open' })
+    setIsPopoverOpen.on()
+  }, [setIsPopoverOpen])
+
+  const connectBitget = React.useCallback(() => {
+    const provider = window.bitkeep && window.bitkeep.ethereum
+
+    if (!provider) {
+      window.open('https://web3.bitget.com/zh-CN/wallet-download?type=2')
+    }
+
+    connect()
+  }, [connect])
 
   return (
     <>
       <Popover
-        openDelay={ 300 }
+        openDelay={300}
         placement="bottom-end"
-        gutter={ 10 }
+        gutter={10}
         isLazy
-        isOpen={ isPopoverOpen }
-        onClose={ setIsPopoverOpen.off }
+        isOpen={isPopoverOpen}
+        onClose={setIsPopoverOpen.off}
       >
-        <WalletTooltip isDisabled={ isWalletConnected || isMobile === undefined || isMobile }>
-          <Box ml={ 2 }>
+        <WalletTooltip isDisabled={isWalletConnected || isMobile === undefined || isMobile}>
+          <Box ml={2}>
             <PopoverTrigger>
               <Button
-                variant={ variant }
+                variant={variant}
                 colorScheme="blue"
-                flexShrink={ 0 }
-                isLoading={ isModalOpening }
+                flexShrink={0}
+                isLoading={isModalOpening}
                 loadingText="Connect wallet"
-                onClick={ isWalletConnected ? openPopover : connect }
+                onClick={() => {
+                  setIsOpen(true)
+                }}
                 fontSize="sm"
-                { ...buttonStyles }
+                {...buttonStyles}
               >
-                { isWalletConnected ? (
+                {isWalletConnected ? (
                   <>
-                    <Box mr={ 2 }>
-                      <AddressIdenticon size={ 20 } hash={ address }/>
+                    <Box mr={2}>
+                      <AddressIdenticon size={20} hash={address} />
                     </Box>
-                    <HashStringShorten hash={ address } isTooltipDisabled/>
+                    <HashStringShorten hash={address} isTooltipDisabled />
                   </>
-                ) : 'Connect wallet' }
+                ) : (
+                  'Connect wallet'
+                )}
               </Button>
             </PopoverTrigger>
           </Box>
         </WalletTooltip>
-        { isWalletConnected && (
+        {isWalletConnected && (
           <PopoverContent w="235px">
             <PopoverBody padding="24px 16px 16px 16px">
-              <WalletMenuContent address={ address } disconnect={ disconnect }/>
+              <WalletMenuContent address={address} disconnect={disconnect} />
             </PopoverBody>
           </PopoverContent>
-        ) }
+        )}
       </Popover>
-      { /* eslint-disable-next-line react/jsx-no-bind */ }
-      <Modal isOpen={ isModalOpen } onClose={ () => {
-        setIsOpen(false);
-      } } size={{ base: 'full', lg: 'sm' }}>
-        <ModalOverlay/>
+      {/* eslint-disable-next-line react/jsx-no-bind */}
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false)
+        }}
+        size={{ base: 'full', lg: 'sm' }}
+      >
+        <ModalOverlay />
         <ModalContent>
           <ModalHeader>Connect Wallet</ModalHeader>
-          <ModalCloseButton/>
+          <ModalCloseButton />
           <ModalBody>
-            { /* eslint-disable-next-line react/jsx-no-bind */ }
-            <Box cursor="pointer" borderRadius="12px" border="1px" borderColor="#E9E9E9" background="#FCFCFC"
-              display="flex" alignItems="center" gap="30px" paddingX="30px" paddingY="10px" marginBottom="30px"
+            {/* eslint-disable-next-line react/jsx-no-bind */}
+            <Box
+              cursor="pointer"
+              borderRadius="12px"
+              border="1px"
+              borderColor="#E9E9E9"
+              background="#FCFCFC"
+              display="flex"
+              alignItems="center"
+              gap="30px"
+              paddingX="30px"
+              paddingY="10px"
+              marginBottom="30px"
             >
-              <Icon as={ NuvoLogo } boxSize={ 12 }/>
-              <Box fontSize="18px" fontWeight="700">Nuvo Wallet</Box>
+              <Icon as={NuvoLogo} boxSize={12} />
+              <Box fontSize="18px" fontWeight="700">
+                Nuvo Wallet
+              </Box>
             </Box>
-            <Box cursor="pointer" borderRadius="12px" border="1px" borderColor="#E9E9E9" background="#FCFCFC"
-              display="flex" alignItems="center" gap="30px" paddingX="30px" paddingY="10px" marginBottom="30px">
-              <Icon as={ BitgetLogo } boxSize={ 12 }/>
-              <Box fontSize="18px" fontWeight="700">Bitget Wallet</Box>
+            <Box
+              onClick={connectBitget}
+              cursor="pointer"
+              borderRadius="12px"
+              border="1px"
+              borderColor="#E9E9E9"
+              background="#FCFCFC"
+              display="flex"
+              alignItems="center"
+              gap="30px"
+              paddingX="30px"
+              paddingY="10px"
+              marginBottom="30px"
+            >
+              <Icon as={BitgetLogo} boxSize={12} />
+              <Box fontSize="18px" fontWeight="700">
+                Bitget Wallet
+              </Box>
             </Box>
-            <Box cursor="pointer" borderRadius="12px" border="1px" borderColor="#E9E9E9" background="#FCFCFC"
-              display="flex" alignItems="center" gap="30px" paddingX="30px" paddingY="10px" marginBottom="30px">
-              <Icon as={ WalletConnectLogo } boxSize={ 12 }/>
-              <Box fontSize="18px" fontWeight="700">WalletConnect</Box>
+            <Box
+              onClick={isWalletConnected ? openPopover : connect}
+              cursor="pointer"
+              borderRadius="12px"
+              border="1px"
+              borderColor="#E9E9E9"
+              background="#FCFCFC"
+              display="flex"
+              alignItems="center"
+              gap="30px"
+              paddingX="30px"
+              paddingY="10px"
+            >
+              <Icon as={WalletConnectLogo} boxSize={12} />
+              <Box fontSize="18px" fontWeight="700">
+                WalletConnect
+              </Box>
             </Box>
           </ModalBody>
         </ModalContent>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default WalletMenuDesktop;
+export default WalletMenuDesktop

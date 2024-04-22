@@ -150,8 +150,11 @@
 	| "verified"
 	| "verify-contract"
 	| "wallet"
+	| "wallets/Bitget"
 	| "wallets/coinbase"
 	| "wallets/metamask"
+	| "wallets/Nuvo"
 	| "wallets/token-pocket"
+	| "wallets/WalletConnect"
 	| "watchlist";
   
