@@ -15,11 +15,13 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react'
+import Image from 'next/image'
 import React, { useState } from 'react'
 import { useSignMessage } from 'wagmi'
 
 // eslint-disable-next-line no-restricted-imports
-import BitgetLogo from 'icons/wallets/Bitget.svg'
+// eslint-disable-next-line no-restricted-imports
+import BitgetLogo from 'icons/wallets/Bitget.png'
 // eslint-disable-next-line no-restricted-imports
 import NuvoLogo from 'icons/wallets/Nuvo.svg'
 // eslint-disable-next-line no-restricted-imports
@@ -160,14 +162,87 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
     setIsPopoverOpen.on()
   }, [setIsPopoverOpen])
 
-  const connectBitget = React.useCallback(() => {
-    const provider = window.bitkeep && window.bitkeep.ethereum
+  // const loginWC = async ()=> {
+  //   if(this.loginParam.isOauth2){
+  //     await this.loginWalletConnectOAuth2();
+  //     return;
+  //   }
+  //
+  //   WallectConnector.loginWalletConnect(this.loginParam.isOauth2).then(async (result) => {
+  //     if (result.code == 200) {
+  //       this.loginSuccess(result.data);
+  //
+  //       SystemModule.updateloadingDialog(false);
+  //     } else {
+  //       SystemModule.updatePromptData({
+  //         status: true,
+  //         content: result.msg
+  //       });
+  //     }
+  //   })
+  //     .catch((err)=>{
+  //       SystemModule.updateloadingDialog(false);
+  //       let showMSg = true;
+  //       if(err.message && err.message == "User closed modal"){
+  //         showMSg = false;
+  //       }
+  //       SystemModule.updatePromptData({
+  //         status: showMSg,
+  //         content: err.message?err.message:err
+  //       });
+  //     });
+  // }
 
-    if (!provider) {
-      window.open('https://web3.bitget.com/zh-CN/wallet-download?type=2')
-    }
-    connect()
-  }, [connect])
+  const connectBitget = React.useCallback(() => {
+    // const provider = window.bitkeep && window.bitkeep.ethereum
+    //
+    // if (!provider) {
+    //   window.open('https://web3.bitget.com/zh-CN/wallet-download?type=2')
+    // }
+    // connect()
+    //
+    // const walletType = "BITGET";
+    // if (isMobile) {
+    //   loginWC()
+    //   return ;
+    // }
+    // console.log('--2--', 2)
+    // if(this.loginParam.isOauth2){
+    //   await this.loginMMOauth2(walletType);
+    //   return;
+    // }
+    //
+    // console.log('--3--', 3)
+    // SystemModule.updateloadingDialog(true);
+    // const address: any = await biggetWallet.getMetaAccounts();
+    // if (!address || address.length <= 0) {
+    //   SystemModule.updateloadingDialog(false);
+    //   return;
+    // }
+    //
+    // console.log('--4--', 4)
+    // if(this.mm_sign[address]){
+    //   console.log('--5--',5)
+    //   this.loginMMMethod(address,this.mm_sign[address]);
+    // }else{
+    //   console.log('--6--',6)
+    //   const nonceRes = await requestMMNonce(address,walletType, false);
+    //   console.log('--nonceRes--',nonceRes)
+    //   if (nonceRes.code == 200) {
+    //     console.log('--7--',7 )
+    //     this.mm_sign[address] = nonceRes.data.msg;
+    //     this.loginMMMethod(address,this.mm_sign[address],walletType);
+    //   }else{
+    //     console.log('--8--',8)
+    //     SystemModule.updatePromptData({
+    //       status: true,
+    //       content: nonceRes.msg
+    //     });
+    //   }
+    //   console.log('--9--',9)
+    // }
+
+  }, [])
 
   const connectNuvo = React.useCallback(() => {
     const VITE_OAUTH_URL = 'https://oauth.staging.nuvosphere.io'
@@ -277,7 +352,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
               paddingY="10px"
               marginBottom="30px"
             >
-              <Icon as={BitgetLogo} boxSize={12} />
+              <Image src={BitgetLogo} width={48} height={48} alt=""/>
               <Box fontSize="18px" fontWeight="700">
                 Bitget Wallet
               </Box>
