@@ -194,12 +194,12 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   // }
 
   const connectBitget = React.useCallback(() => {
-    // const provider = window.bitkeep && window.bitkeep.ethereum
-    //
-    // if (!provider) {
-    //   window.open('https://web3.bitget.com/zh-CN/wallet-download?type=2')
-    // }
-    // connect()
+    const provider = window.bitkeep && window.bitkeep.ethereum
+
+    if (!provider) {
+      window.open('https://web3.bitget.com/zh-CN/wallet-download?type=2')
+    }
+    connect()
     //
     // const walletType = "BITGET";
     // if (isMobile) {
@@ -242,7 +242,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
     //   console.log('--9--',9)
     // }
 
-  }, [])
+  }, [connect])
 
   const connectNuvo = React.useCallback(() => {
     const VITE_OAUTH_URL = 'https://oauth.staging.nuvosphere.io'
