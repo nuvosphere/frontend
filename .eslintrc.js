@@ -61,7 +61,7 @@ module.exports = {
     '@typescript-eslint/brace-style': [ 'error', '1tbs' ],
     '@typescript-eslint/consistent-type-imports': [ 'error' ],
     '@typescript-eslint/indent': [ 'error', 2 ],
-    '@typescript-eslint/member-delimiter-style': [ 'error' ],
+    // '@typescript-eslint/member-delimiter-style': [ 'error' ],
     '@typescript-eslint/naming-convention': [ 'error',
       {
         selector: 'default',
@@ -133,7 +133,7 @@ module.exports = {
     'no-use-before-define': 'off',
     'no-useless-constructor': 'off',
 
-    'array-bracket-spacing': [ 'error', 'always' ],
+    // 'array-bracket-spacing': [ 'error', 'always' ],
     'arrow-spacing': [ 'error', { before: true, after: true } ],
     'comma-dangle': [ 'error', 'always-multiline' ],
     'comma-spacing': [ 'error' ],
@@ -154,7 +154,7 @@ module.exports = {
       allowBlockStart: true,
     } ],
     'max-len': [ 'error', 160, 4 ],
-    'no-console': 'error',
+    'no-console': 'off',
     'no-empty': [ 'error', { allowEmptyCatch: true } ],
     'no-implicit-coercion': [ 'error', {
       number: true,
@@ -195,9 +195,9 @@ module.exports = {
     'space-in-parens': [ 'error', 'never' ],
     'space-infix-ops': 'error',
     'space-unary-ops': 'off',
-    'template-curly-spacing': [ 'error', 'always' ],
+    // 'template-curly-spacing': [ 'error', 'always' ],
     'wrap-iife': [ 'error', 'inside' ],
-    semi: [ 'error', 'always' ],
+    // semi: [ 'error', 'always' ],
 
     'import-helpers/order-imports': [
       'error',
@@ -238,30 +238,30 @@ module.exports = {
     } ],
 
     'react/jsx-key': 'error',
-    'react/jsx-no-bind': [ 'error', {
-      ignoreRefs: true,
-    } ],
+    // 'react/jsx-no-bind': [ 'error', {
+    //   ignoreRefs: true,
+    // } ],
     'react/jsx-curly-brace-presence': [ 'error', {
       props: 'never',
       children: 'never',
     } ],
-    'react/jsx-curly-spacing': [ 'error', {
-      when: 'always',
-      children: true,
-      spacing: {
-        objectLiterals: 'never',
-      },
-    } ],
+    // 'react/jsx-curly-spacing': [ 'error', {
+    //   when: 'always',
+    //   children: true,
+    //   spacing: {
+    //     objectLiterals: 'never',
+    //   },
+    // } ],
     'react/jsx-equals-spacing': [ 'error', 'never' ],
     'react/jsx-fragments': [ 'error', 'syntax' ],
     'react/jsx-no-duplicate-props': 'error',
     'react/jsx-no-target-blank': 'off',
     'react/jsx-no-useless-fragment': 'error',
-    'react/jsx-tag-spacing': [ 'error', {
-      afterOpening: 'never',
-      beforeSelfClosing: 'never',
-      closingSlash: 'never',
-    } ],
+    // 'react/jsx-tag-spacing': [ 'error', {
+    //   afterOpening: 'never',
+    //   beforeSelfClosing: 'never',
+    //   closingSlash: 'never',
+    // } ],
     'react/jsx-wrap-multilines': [ 'error', {
       declaration: 'parens-new-line',
       assignment: 'parens-new-line',
