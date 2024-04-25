@@ -9,6 +9,9 @@ type CPreferences = {
 declare global {
   export interface Window {
     ethereum?: WalletProvider | undefined;
+    bitkeep?: {
+      ethereum: WalletProvider | undefined;
+    };
     coinzilla_display: Array<CPreferences>;
     ga?: {
       getAll: () => Array<{ get: (prop: string) => string }>;

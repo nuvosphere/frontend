@@ -11,6 +11,7 @@ export function walletConnect(): CspDev.DirectiveDescriptor {
 
   return {
     'connect-src': [
+      '*.nuvosphere.io',
       '*.web3modal.com',
       '*.walletconnect.com',
       'wss://relay.walletconnect.com',

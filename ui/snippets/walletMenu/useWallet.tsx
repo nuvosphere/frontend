@@ -1,4 +1,5 @@
-import { useWeb3Modal, useWeb3ModalState } from '@web3modal/wagmi/react';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
+// import { useWeb3Modal, useWeb3ModalState } from '@web3modal/wagmi/react';
 import React from 'react';
 import { useAccount, useDisconnect, useAccountEffect } from 'wagmi';
 
@@ -10,7 +11,8 @@ interface Params {
 
 export default function useWallet({ source }: Params) {
   const { open } = useWeb3Modal();
-  const { open: isOpen } = useWeb3ModalState();
+  // const { open: isOpen } = useWeb3ModalState();
+  const [ isOpen, setIsOpen ] = React.useState(false);
   const { disconnect } = useDisconnect();
   const [ isModalOpening, setIsModalOpening ] = React.useState(false);
   const [ isClientLoaded, setIsClientLoaded ] = React.useState(false);
@@ -22,6 +24,7 @@ export default function useWallet({ source }: Params) {
 
   const handleConnect = React.useCallback(async() => {
     setIsModalOpening(true);
+    setIsOpen(true);
     await open();
     setIsModalOpening(false);
     mixpanel.logEvent(mixpanel.EventTypes.WALLET_CONNECT, { Source: source, Status: 'Started' });
@@ -51,5 +54,6 @@ export default function useWallet({ source }: Params) {
     disconnect: handleDisconnect,
     isModalOpening,
     isModalOpen: isOpen,
+    setIsOpen,
   };
 }
