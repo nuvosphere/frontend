@@ -15,6 +15,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
+import axios from 'axios';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { useSignMessage } from 'wagmi';
@@ -47,11 +48,12 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   const isMobile = useIsMobile();
   const [showConnect, setShowConnect] = useState(false);
   const { signMessage } = useSignMessage();
-  // const { address } = useAccount()
 
-  const DAPP_ID = '646da224e530a70013d94d8f';
+  const NUVO_DAPP_ID = '64bf8264ccdabc001392582f'; // admin testnet app id
+  // const NUVO_DAPP_KEY = 'd90da492d517476d8d47f49e6a6c46b6'; // admin testnet app key
+  const NUVO_OAUTH = 'https://oauth.staging.nuvosphere.io';
   const NUVO_API = 'https://api.staging.nuvosphere.io';
-  const RETURN_URL = 'http://127.0.0.1:3000';
+  // const NUVO_CHAIN_ID = 59902;
 
   const sign = React.useCallback(
     (message: string) => {
@@ -59,22 +61,19 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
         { message },
         {
           onSuccess: (sig) => {
-            fetch(NUVO_API + '/api/v1/oauth2/wallet/get_code', {
-              method: 'POST',
-              headers: { 'content-type': 'application/json' },
-              body: JSON.stringify({
+            const returnUrl = encodeURIComponent(location.href);
+            axios({
+              url: NUVO_API + '/api/v1/oauth2/wallet/get_code',
+              data: {
                 address: address,
                 signature: sig,
                 wallet_type: 'BITGET',
-                return_url: RETURN_URL,
-                app_id: DAPP_ID,
-              }),
-            })
-              .then((response) => response.json())
-              .then((res) => {
-                console.log('wallet_get_code', res);
-              })
-              .catch((err) => console.error(err));
+                return_url: returnUrl,
+                app_id: NUVO_DAPP_ID,
+              },
+            }).then(({ data: res }) => {
+              console.log('wallet_get_code', res);
+            });
           },
           onError: (error) => {
             console.error({
@@ -93,33 +92,20 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
     if (walletId !== `"com.bitget.web3"`) {
       return;
     }
-
-    fetch(NUVO_API + '/api/v1/oauth2/wallet/nonce', {
+    axios({
+      url: NUVO_API + '/api/v1/oauth2/wallet/nonce',
       method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
+      data: {
         address: address,
         type: 'BITGET',
-        app_id: DAPP_ID,
-      }),
-    })
-      .then(
-        (response) =>
-          response.json() as unknown as {
-            data: {
-              msg: string;
-            };
-          },
-      )
-      .then((res) => {
-        if (res?.data?.msg) {
-          const message = res.data.msg;
-          sign(message);
-        }
-      })
-      .catch((err) => console.error(err));
+        app_id: NUVO_DAPP_ID,
+      },
+    }).then(({ data: res }) => {
+      if (res?.data?.msg) {
+        const message = res.data.msg;
+        sign(message);
+      }
+    });
   }, [sign, address]);
 
   const variant = React.useMemo(() => {
@@ -168,12 +154,9 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   }, [connect]);
 
   const connectNuvo = React.useCallback(() => {
-    const VITE_OAUTH_URL = 'https://oauth.staging.nuvosphere.io';
-    const VITE_DAPP_ID = '646da224e530a70013d94d8f';
-
     const returnUrl = encodeURIComponent(location.href);
     const switchAccount = true;
-    const loginUrl = `${VITE_OAUTH_URL}/#/oauth2-login?switch_account=${switchAccount}&app_id=${VITE_DAPP_ID}&return_url=${returnUrl}`;
+    const loginUrl = NUVO_OAUTH + `/#/oauth2-login?switch_account=${switchAccount}&app_id=${NUVO_DAPP_ID}&return_url=${returnUrl}`;
     location.href = loginUrl;
   }, []);
 
@@ -217,7 +200,6 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
           </PopoverContent>
         )}
       </Popover>
-      {/* eslint-disable-next-line react/jsx-no-bind */}
       <Modal
         isOpen={showConnect}
         onClose={() => {
@@ -234,7 +216,6 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
           <ModalHeader>Connect Wallet</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {/* eslint-disable-next-line react/jsx-no-bind */}
             <Box
               onClick={connectNuvo}
               cursor="pointer"
