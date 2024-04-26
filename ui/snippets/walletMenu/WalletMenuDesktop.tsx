@@ -43,7 +43,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   // isModalOpen
   const { isWalletConnected, address, connect, disconnect, isModalOpening } = useWallet({ source: 'Header' });
   const { themedBackground, themedBorderColor, themedColor } = useMenuButtonColors();
-  const [ isPopoverOpen, setIsPopoverOpen ] = useBoolean(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useBoolean(false);
   const isMobile = useIsMobile();
   const [showConnect, setShowConnect] = useState(false);
   const { signMessage } = useSignMessage();
@@ -157,36 +157,6 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
     mixpanel.logEvent(mixpanel.EventTypes.WALLET_ACTION, { Action: 'Open' });
     setIsPopoverOpen.on();
   }, [setIsPopoverOpen]);
-  // const loginWC = async ()=> {
-  //   if(this.loginParam.isOauth2){
-  //     await this.loginWalletConnectOAuth2();
-  //     return;
-  //   }
-  //
-  //   WallectConnector.loginWalletConnect(this.loginParam.isOauth2).then(async (result) => {
-  //     if (result.code == 200) {
-  //       this.loginSuccess(result.data);
-  //
-  //       SystemModule.updateloadingDialog(false);
-  //     } else {
-  //       SystemModule.updatePromptData({
-  //         status: true,
-  //         content: result.msg
-  //       });
-  //     }
-  //   })
-  //     .catch((err)=>{
-  //       SystemModule.updateloadingDialog(false);
-  //       let showMSg = true;
-  //       if(err.message && err.message == "User closed modal"){
-  //         showMSg = false;
-  //       }
-  //       SystemModule.updatePromptData({
-  //         status: showMSg,
-  //         content: err.message?err.message:err
-  //       });
-  //     });
-  // }
 
   const connectBitget = React.useCallback(() => {
     const provider = window.bitkeep && window.bitkeep.ethereum;
@@ -195,48 +165,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
       return;
     }
     connect();
-    //
-    // const walletType = "BITGET";
-    // if (isMobile) {
-    //   loginWC()
-    //   return ;
-    // }
-    // console.log('--2--', 2)
-    // if(this.loginParam.isOauth2){
-    //   await this.loginMMOauth2(walletType);
-    //   return;
-    // }
-    //
-    // console.log('--3--', 3)
-    // SystemModule.updateloadingDialog(true);
-    // const address: any = await biggetWallet.getMetaAccounts();
-    // if (!address || address.length <= 0) {
-    //   SystemModule.updateloadingDialog(false);
-    //   return;
-    // }
-    //
-    // console.log('--4--', 4)
-    // if(this.mm_sign[address]){
-    //   console.log('--5--',5)
-    //   this.loginMMMethod(address,this.mm_sign[address]);
-    // }else{
-    //   console.log('--6--',6)
-    //   const nonceRes = await requestMMNonce(address,walletType, false);
-    //   console.log('--nonceRes--',nonceRes)
-    //   if (nonceRes.code == 200) {
-    //     console.log('--7--',7 )
-    //     this.mm_sign[address] = nonceRes.data.msg;
-    //     this.loginMMMethod(address,this.mm_sign[address],walletType);
-    //   }else{
-    //     console.log('--8--',8)
-    //     SystemModule.updatePromptData({
-    //       status: true,
-    //       content: nonceRes.msg
-    //     });
-    //   }
-    //   console.log('--9--',9)
-    // }
-  }, [ connect ]);
+  }, [connect]);
 
   const connectNuvo = React.useCallback(() => {
     const VITE_OAUTH_URL = 'https://oauth.staging.nuvosphere.io';
