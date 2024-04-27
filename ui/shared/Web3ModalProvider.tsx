@@ -50,6 +50,28 @@ const initProvider = () => {
       if (res.code === 200) {
         const address = res.data.eth_address;
         console.log('🌊', address);
+      } else {
+        localStorage.removeItem('AccessToken');
+        // Access token not existed
+        const refreshToken = localStorage.getItem('RefreshToken');
+        if (refreshToken) {
+          axios({
+            url: NUVO_API + '/api/v1/oauth2/refresh_token',
+            params: {
+              app_id: NUVO_DAPP_ID,
+              refresh_token: refreshToken,
+            },
+          }).then(({ data: res }) => {
+            if (res.code === 200 && res.data.accessToken) {
+              localStorage.setItem('AccessToken', res.data.accessToken);
+              localStorage.setItem('RefreshToken', res.data.refreshToken);
+            } else {
+              localStorage.removeItem('RefreshToken');
+            }
+            // reload
+            initProvider();
+          });
+        }
       }
     });
     // get provider
@@ -68,8 +90,6 @@ const init = () => {
     if (!wagmiConfig || !feature.isEnabled) {
       return;
     }
-    initProvider();
-
     createWeb3Modal({
       wagmiConfig,
       projectId: feature.walletConnect.projectId,
@@ -82,6 +102,7 @@ const init = () => {
       featuredWalletIds: [],
       allowUnsupportedChain: true,
     });
+    initProvider();
   } catch (error) {}
 };
 
