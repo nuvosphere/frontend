@@ -190,7 +190,7 @@ module.exports = {
     quotes: [ 'error', 'single', {
       allowTemplateLiterals: true,
     } ],
-    'space-before-function-paren': [ 'error', 'never' ],
+    // 'space-before-function-paren': [ 'error', 'never' ],
     'space-before-blocks': [ 'error', 'always' ],
     'space-in-parens': [ 'error', 'never' ],
     'space-infix-ops': 'error',

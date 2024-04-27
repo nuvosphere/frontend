@@ -18,7 +18,7 @@ import {
 import axios from 'axios';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { useSignMessage } from 'wagmi';
+import { useSignMessage, useConnect } from 'wagmi';
 
 // eslint-disable-next-line no-restricted-imports
 import BitgetLogo from 'icons/wallets/Bitget.png';
@@ -42,7 +42,8 @@ type Props = {
 
 const WalletMenuDesktop = ({ isHomePage }: Props) => {
   // isModalOpen
-  const { isWalletConnected, address, connect, disconnect, isModalOpening } = useWallet({ source: 'Header' });
+  const { isWalletConnected, address, disconnect, isModalOpening, connect: walletConnect } = useWallet({ source: 'Header' });
+  const { connect, connectors } = useConnect();
   const { themedBackground, themedBorderColor, themedColor } = useMenuButtonColors();
   const [isPopoverOpen, setIsPopoverOpen] = useBoolean(false);
   const isMobile = useIsMobile();
@@ -55,42 +56,12 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   const NUVO_API = 'https://api.staging.nuvosphere.io';
   // const NUVO_CHAIN_ID = 59902;
 
-  const sign = React.useCallback(
-    (message: string) => {
-      signMessage(
-        { message },
-        {
-          onSuccess: (sig) => {
-            const returnUrl = encodeURIComponent(location.href);
-            axios({
-              url: NUVO_API + '/api/v1/oauth2/wallet/get_code',
-              data: {
-                address: address,
-                signature: sig,
-                wallet_type: 'BITGET',
-                return_url: returnUrl,
-                app_id: NUVO_DAPP_ID,
-              },
-            }).then(({ data: res }) => {
-              console.log('wallet_get_code', res);
-            });
-          },
-          onError: (error) => {
-            console.error({
-              type: 'SIGNING_FAIL',
-              message: (error as Error)?.message || 'Oops! Something went wrong',
-            });
-          },
-        },
-      );
-    },
-    [signMessage, address],
-  );
-
-  const putNuvo = React.useCallback(() => {
-    const walletId = localStorage['wagmi.recentConnectorId'];
-    if (walletId !== `"com.bitget.web3"`) {
+  const registerNuvo = React.useCallback(() => {
+    const walletId = localStorage.getItem('wagmi.recentConnectorId');
+    if (localStorage.getItem('nuvo.register') || walletId !== `"com.bitget.web3"`) {
       return;
+    } else {
+      localStorage.setItem('nuvo.register', 'registered');
     }
     axios({
       url: NUVO_API + '/api/v1/oauth2/wallet/nonce',
@@ -103,21 +74,46 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
     }).then(({ data: res }) => {
       if (res?.data?.msg) {
         const message = res.data.msg;
-        sign(message);
+        signMessage(
+          { message },
+          {
+            onSuccess: (sig) => {
+              const returnUrl = encodeURIComponent(location.href);
+              axios({
+                url: NUVO_API + '/api/v1/oauth2/wallet/get_code',
+                data: {
+                  address: address,
+                  signature: sig,
+                  wallet_type: 'BITGET',
+                  return_url: returnUrl,
+                  app_id: NUVO_DAPP_ID,
+                },
+              }).then(({ data: res }) => {
+                console.log('wallet_get_code', res);
+              });
+            },
+            onError: (error) => {
+              console.error({
+                type: 'SIGNING_FAIL',
+                message: (error as Error)?.message || 'Oops! Something went wrong',
+              });
+            },
+          },
+        );
       }
     });
-  }, [sign, address]);
+  }, [address, signMessage]);
 
   const variant = React.useMemo(() => {
     if (isWalletConnected) {
       if (showConnect) {
-        putNuvo();
+        registerNuvo();
         setShowConnect(false);
       }
       return 'subtle';
     }
     return isHomePage ? 'solid' : 'outline';
-  }, [isWalletConnected, isHomePage, showConnect, putNuvo]);
+  }, [isWalletConnected, isHomePage, showConnect, registerNuvo]);
 
   let buttonStyles: Partial<ButtonProps> = {};
   if (isWalletConnected) {
@@ -144,14 +140,15 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
     setIsPopoverOpen.on();
   }, [setIsPopoverOpen]);
 
-  const connectBitget = React.useCallback(() => {
-    const provider = window.bitkeep && window.bitkeep.ethereum;
-    if (!provider) {
+  const connectBitget = React.useCallback(async () => {
+    localStorage.removeItem('nuvo.register');
+    const bitgetConnector = connectors.find((connector) => connector.id === 'com.bitget.web3');
+    if (bitgetConnector) {
+      connect({ connector: bitgetConnector });
+    } else {
       window.open('https://web3.bitget.com/zh-CN/wallet-download?type=2');
-      return;
     }
-    connect();
-  }, [connect]);
+  }, [connectors, connect]);
 
   const connectNuvo = React.useCallback(() => {
     const returnUrl = encodeURIComponent(location.href);
@@ -159,6 +156,15 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
     const loginUrl = NUVO_OAUTH + `/#/oauth2-login?switch_account=${switchAccount}&app_id=${NUVO_DAPP_ID}&return_url=${returnUrl}`;
     location.href = loginUrl;
   }, []);
+
+  const connectWalletConnect = React.useCallback(() => {
+    localStorage.removeItem('nuvo.register');
+    if (isWalletConnected) {
+      openPopover();
+    } else {
+      walletConnect();
+    }
+  }, [isWalletConnected, openPopover, walletConnect]);
 
   return (
     <>
@@ -255,7 +261,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
               </Box>
             </Box>
             <Box
-              onClick={isWalletConnected ? openPopover : connect}
+              onClick={connectWalletConnect}
               cursor="pointer"
               borderRadius="12px"
               border="1px"
