@@ -7,17 +7,19 @@ import React from 'react';
 import { WagmiProvider } from 'wagmi';
 
 import config from 'configs/app';
+import { getEnvValue } from 'configs/app/utils';
 import wagmiConfig from 'lib/web3/wagmiConfig';
 import colors from 'theme/foundations/colors';
 import { BODY_TYPEFACE } from 'theme/foundations/typography';
 import zIndices from 'theme/foundations/zIndices';
+
 const feature = config.features.blockchainInteraction;
 
-const NUVO_DAPP_ID = '64bf8264ccdabc001392582f'; // admin testnet app id
-const NUVO_DAPP_KEY = 'd90da492d517476d8d47f49e6a6c46b6'; // admin testnet app key
+const NUVO_DAPP_ID = getEnvValue('NUVO_DAPP_ID'); // admin testnet app id
+const NUVO_DAPP_KEY = getEnvValue('NUVO_DAPP_KEY'); // admin testnet app key
 // const NUVO_OAUTH = 'https://oauth.staging.nuvosphere.io';
-const NUVO_API = 'https://api.staging.nuvosphere.io';
-const NUVO_CHAIN_ID = 59902;
+const NUVO_API = getEnvValue('NUVO_API');
+const NUVO_CHAIN_ID = getEnvValue('NUVO_CHAIN_ID') ;
 
 const initProvider = () => {
   const currentUrl = new URL(window.location.href);
