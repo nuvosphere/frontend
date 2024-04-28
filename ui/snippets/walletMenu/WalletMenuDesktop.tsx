@@ -57,8 +57,8 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   const NUVO_API = getEnvValue('NEXT_PUBLIC_NUVO_API');
 
   const registerNuvo = React.useCallback(() => {
-    const walletId = localStorage.getItem('wagmi.recentConnectorId');
-    if (localStorage.getItem('nuvo.register') || walletId !== `"com.bitget.web3"`) {
+    // const walletId = localStorage.getItem('wagmi.recentConnectorId');
+    if (localStorage.getItem('nuvo.register')) {
       return;
     } else {
       localStorage.setItem('nuvo.register', 'registered');
