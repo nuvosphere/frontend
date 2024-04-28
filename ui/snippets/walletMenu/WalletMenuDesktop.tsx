@@ -141,11 +141,21 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
 
   const connectBitget = React.useCallback(async () => {
     localStorage.removeItem('nuvo.register');
-    const bitgetConnector = connectors.find((connector) => connector.id === 'com.bitget.web3');
-    if (bitgetConnector) {
-      connect({ connector: bitgetConnector });
+    const connector = connectors.find((connector) => connector.id === 'com.bitget.web3');
+    if (connector) {
+      connect({ connector });
     } else {
-      window.open('https://web3.bitget.com/zh-CN/wallet-download?type=2');
+      window.open('https://web3.bitget.com/zh-CN/wallet-download');
+    }
+  }, [connectors, connect]);
+
+  const connectMetaMask = React.useCallback(async () => {
+    localStorage.removeItem('nuvo.register');
+    const connector = connectors.find((connector) => connector.id === 'io.metamask');
+    if (connector) {
+      connect({ connector });
+    } else {
+      window.open('https://metamask.io/download/');
     }
   }, [connectors, connect]);
 
@@ -261,7 +271,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
               </Box>
             </Box>
             <Box
-              onClick={connectBitget}
+              onClick={connectMetaMask}
               cursor="pointer"
               borderRadius="12px"
               border="1px"
@@ -276,7 +286,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
             >
               <Image src={BitgetLogo} width={48} height={48} alt="" />
               <Box fontSize="18px" fontWeight="700">
-                MetaMask
+                MetaMask Wallet
               </Box>
             </Box>
             <Box
