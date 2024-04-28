@@ -16,13 +16,12 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import axios from 'axios';
-import Image from 'next/image';
 import React, { useState } from 'react';
 import { useSignMessage, useConnect } from 'wagmi';
 
 import { getEnvValue } from 'configs/app/utils';
 // eslint-disable-next-line no-restricted-imports
-import BitgetLogo from 'icons/wallets/Bitget.png';
+import BitgetLogo from 'icons/wallets/Bitget.svg';
 // eslint-disable-next-line no-restricted-imports
 import MetaMaskLogo from 'icons/wallets/metamask.svg';
 // eslint-disable-next-line no-restricted-imports
@@ -266,7 +265,9 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
               paddingY="10px"
               marginBottom="30px"
             >
-              <Image src={BitgetLogo} width={48} height={48} alt="" />
+              <Box width={12} height={12}>
+                <BitgetLogo />
+              </Box>
               <Box fontSize="18px" fontWeight="700">
                 Bitget Wallet
               </Box>
@@ -285,7 +286,9 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
               paddingY="10px"
               marginBottom="30px"
             >
-              <Image src={MetaMaskLogo} width={48} height={48} alt="" />
+              <Box width={12} height={12}>
+                <MetaMaskLogo />
+              </Box>
               <Box fontSize="18px" fontWeight="700">
                 MetaMask Wallet
               </Box>
