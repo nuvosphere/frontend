@@ -15,11 +15,10 @@ import zIndices from 'theme/foundations/zIndices';
 
 const feature = config.features.blockchainInteraction;
 
-const NUVO_DAPP_ID = getEnvValue('NUVO_DAPP_ID'); // admin testnet app id
-const NUVO_DAPP_KEY = getEnvValue('NUVO_DAPP_KEY'); // admin testnet app key
-// const NUVO_OAUTH = 'https://oauth.staging.nuvosphere.io';
-const NUVO_API = getEnvValue('NUVO_API');
-const NUVO_CHAIN_ID = getEnvValue('NUVO_CHAIN_ID') ;
+const NUVO_DAPP_ID = getEnvValue('NEXT_PUBLIC_NUVO_DAPP_ID'); // admin testnet app id
+const NUVO_DAPP_KEY = getEnvValue('NEXT_PUBLIC_NUVO_DAPP_KEY'); // admin testnet app key
+const NUVO_API = getEnvValue('NEXT_PUBLIC_NUVO_API');
+const NUVO_CHAIN_ID = Number(getEnvValue('NEXT_PUBLIC_NUVO_CHAIN_ID'));
 
 const initProvider = () => {
   const currentUrl = new URL(window.location.href);

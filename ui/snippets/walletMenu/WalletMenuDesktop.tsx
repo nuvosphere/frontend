@@ -20,6 +20,7 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { useSignMessage, useConnect } from 'wagmi';
 
+import { getEnvValue } from 'configs/app/utils';
 // eslint-disable-next-line no-restricted-imports
 import BitgetLogo from 'icons/wallets/Bitget.png';
 // eslint-disable-next-line no-restricted-imports
@@ -50,11 +51,9 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   const [showConnect, setShowConnect] = useState(false);
   const { signMessage } = useSignMessage();
 
-  const NUVO_DAPP_ID = '64bf8264ccdabc001392582f'; // admin testnet app id
-  // const NUVO_DAPP_KEY = 'd90da492d517476d8d47f49e6a6c46b6'; // admin testnet app key
-  const NUVO_OAUTH = 'https://oauth.staging.nuvosphere.io';
-  const NUVO_API = 'https://api.staging.nuvosphere.io';
-  // const NUVO_CHAIN_ID = 59902;
+  const NUVO_DAPP_ID = getEnvValue('NEXT_PUBLIC_NUVO_DAPP_ID'); // admin testnet app id
+  const NUVO_OAUTH = getEnvValue('NEXT_PUBLIC_NUVO_OAUTH');
+  const NUVO_API = getEnvValue('NEXT_PUBLIC_NUVO_API');
 
   const registerNuvo = React.useCallback(() => {
     const walletId = localStorage.getItem('wagmi.recentConnectorId');
@@ -102,7 +101,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
         );
       }
     });
-  }, [address, signMessage]);
+  }, [address, signMessage, NUVO_DAPP_ID, NUVO_API]);
 
   const variant = React.useMemo(() => {
     if (isWalletConnected) {
@@ -151,11 +150,12 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   }, [connectors, connect]);
 
   const connectNuvo = React.useCallback(() => {
+    console.log('🌊', NUVO_API);
     const returnUrl = encodeURIComponent(location.href);
     const switchAccount = true;
     const loginUrl = NUVO_OAUTH + `/#/oauth2-login?switch_account=${switchAccount}&app_id=${NUVO_DAPP_ID}&return_url=${returnUrl}`;
     location.href = loginUrl;
-  }, []);
+  }, [NUVO_DAPP_ID, NUVO_OAUTH, NUVO_API]);
 
   const connectWalletConnect = React.useCallback(() => {
     localStorage.removeItem('nuvo.register');
@@ -258,6 +258,25 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
               <Image src={BitgetLogo} width={48} height={48} alt="" />
               <Box fontSize="18px" fontWeight="700">
                 Bitget Wallet
+              </Box>
+            </Box>
+            <Box
+              onClick={connectBitget}
+              cursor="pointer"
+              borderRadius="12px"
+              border="1px"
+              borderColor="#E9E9E9"
+              background="#FCFCFC"
+              display="flex"
+              alignItems="center"
+              gap="30px"
+              paddingX="30px"
+              paddingY="10px"
+              marginBottom="30px"
+            >
+              <Image src={BitgetLogo} width={48} height={48} alt="" />
+              <Box fontSize="18px" fontWeight="700">
+                MetaMask
               </Box>
             </Box>
             <Box

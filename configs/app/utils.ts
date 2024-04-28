@@ -3,7 +3,7 @@ import * as regexp from 'lib/regexp';
 
 export const replaceQuotes = (value: string | undefined) => value?.replaceAll('\'', '"');
 
-export const getEnvValue = (envName: string) => {
+export const getEnvValue = (envName: string): string => {
   // eslint-disable-next-line no-restricted-properties
   const envs = isBrowser() ? window.__envs : process.env;
 
@@ -15,7 +15,7 @@ export const getEnvValue = (envName: string) => {
     }
   }
 
-  return replaceQuotes(envs[envName]);
+  return replaceQuotes(envs[envName]) || '';
 };
 
 export const parseEnvJson = <DataType>(env: string | undefined): DataType | null => {
