@@ -24,6 +24,8 @@ import { getEnvValue } from 'configs/app/utils';
 // eslint-disable-next-line no-restricted-imports
 import BitgetLogo from 'icons/wallets/Bitget.png';
 // eslint-disable-next-line no-restricted-imports
+import MetaMaskLogo from 'icons/wallets/metamask.svg';
+// eslint-disable-next-line no-restricted-imports
 import NuvoLogo from 'icons/wallets/Nuvo.svg';
 // eslint-disable-next-line no-restricted-imports
 import WalletConnectLogo from 'icons/wallets/WalletConnect.svg';
@@ -284,7 +286,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
               paddingY="10px"
               marginBottom="30px"
             >
-              <Image src={BitgetLogo} width={48} height={48} alt="" />
+              <Image src={MetaMaskLogo} width={48} height={48} alt="" />
               <Box fontSize="18px" fontWeight="700">
                 MetaMask Wallet
               </Box>
