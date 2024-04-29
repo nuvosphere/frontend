@@ -1,10 +1,7 @@
 import type { ButtonProps } from '@chakra-ui/react';
 import { Popover, PopoverContent, PopoverBody, PopoverTrigger, Button, Box, useBoolean } from '@chakra-ui/react';
-import axios from 'axios';
-import React, { useState } from 'react';
-import { useSignMessage } from 'wagmi';
+import React, { useEffect, useState } from 'react';
 
-import { getEnvValue } from 'configs/app/utils';
 import useIsMobile from 'lib/hooks/useIsMobile';
 import * as mixpanel from 'lib/mixpanel/index';
 import AddressIdenticon from 'ui/shared/entities/address/AddressIdenticon';
@@ -21,64 +18,15 @@ type Props = {
 };
 
 const WalletMenuDesktop = ({ isHomePage }: Props) => {
-  // isModalOpen
-  const { isWalletConnected, address, disconnect, isModalOpening } = useWallet({ source: 'Header' });
+  const { isWalletConnected, address, disconnect, isModalOpening, nuvoLogin, initProvider } = useWallet({ source: 'Header' });
   const { themedBackground, themedBorderColor, themedColor } = useMenuButtonColors();
   const [isPopoverOpen, setIsPopoverOpen] = useBoolean(false);
   const isMobile = useIsMobile();
   const [showConnect, setShowConnect] = useState(false);
-  const { signMessage } = useSignMessage();
 
-  const NUVO_DAPP_ID = getEnvValue('NEXT_PUBLIC_NUVO_DAPP_ID'); // admin testnet app id
-  const NUVO_API = getEnvValue('NEXT_PUBLIC_NUVO_API');
-
-  const registerNuvo = React.useCallback(() => {
-    // const walletId = localStorage.getItem('wagmi.recentConnectorId');
-    if (localStorage.getItem('nuvo.register')) {
-      return;
-    } else {
-      localStorage.setItem('nuvo.register', 'registered');
-    }
-    axios({
-      url: NUVO_API + '/api/v1/oauth2/wallet/nonce',
-      method: 'POST',
-      data: {
-        address: address,
-        type: 'BITGET',
-        app_id: NUVO_DAPP_ID,
-      },
-    }).then(({ data: res }) => {
-      if (res?.data?.msg) {
-        const message = res.data.msg;
-        signMessage(
-          { message },
-          {
-            onSuccess: (sig) => {
-              const returnUrl = encodeURIComponent(location.href);
-              axios({
-                url: NUVO_API + '/api/v1/oauth2/wallet/get_code',
-                data: {
-                  address: address,
-                  signature: sig,
-                  wallet_type: 'BITGET',
-                  return_url: returnUrl,
-                  app_id: NUVO_DAPP_ID,
-                },
-              }).then(({ data: res }) => {
-                console.log('wallet_get_code', res);
-              });
-            },
-            onError: (error) => {
-              console.error({
-                type: 'SIGNING_FAIL',
-                message: (error as Error)?.message || 'Oops! Something went wrong',
-              });
-            },
-          },
-        );
-      }
-    });
-  }, [address, signMessage, NUVO_DAPP_ID, NUVO_API]);
+  useEffect(() => {
+    initProvider();
+  }, [initProvider]);
 
   const openPopover = React.useCallback(() => {
     mixpanel.logEvent(mixpanel.EventTypes.WALLET_ACTION, { Action: 'Open' });
@@ -88,13 +36,13 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   const variant = React.useMemo(() => {
     if (isWalletConnected) {
       if (showConnect) {
-        registerNuvo();
+        nuvoLogin();
         setShowConnect(false);
       }
       return 'subtle';
     }
     return isHomePage ? 'solid' : 'outline';
-  }, [isWalletConnected, isHomePage, showConnect, registerNuvo]);
+  }, [isWalletConnected, isHomePage, showConnect, nuvoLogin]);
 
   let buttonStyles: Partial<ButtonProps> = {};
   if (isWalletConnected) {
