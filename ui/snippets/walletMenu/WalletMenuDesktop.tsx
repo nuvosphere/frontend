@@ -25,7 +25,7 @@ import BitgetLogo from 'icons/wallets/Bitget.svg';
 // eslint-disable-next-line no-restricted-imports
 import MetaMaskLogo from 'icons/wallets/metamask.svg';
 // eslint-disable-next-line no-restricted-imports
-// import NuvoLogo from 'icons/wallets/Nuvo.svg';
+import NuvoLogo from 'icons/wallets/Nuvo.svg';
 // eslint-disable-next-line no-restricted-imports
 import WalletConnectLogo from 'icons/wallets/WalletConnect.svg';
 import useIsMobile from 'lib/hooks/useIsMobile';
@@ -53,7 +53,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   const { signMessage } = useSignMessage();
 
   const NUVO_DAPP_ID = getEnvValue('NEXT_PUBLIC_NUVO_DAPP_ID'); // admin testnet app id
-  // const NUVO_OAUTH = getEnvValue('NEXT_PUBLIC_NUVO_OAUTH');
+  const NUVO_OAUTH = getEnvValue('NEXT_PUBLIC_NUVO_OAUTH');
   const NUVO_API = getEnvValue('NEXT_PUBLIC_NUVO_API');
 
   const registerNuvo = React.useCallback(() => {
@@ -160,12 +160,13 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
     }
   }, [connectors, connect]);
 
-  // const connectNuvo = React.useCallback(() => {
-  //   const returnUrl = encodeURIComponent(location.href);
-  //   const switchAccount = true;
-  //   const loginUrl = NUVO_OAUTH + `/#/oauth2-login?switch_account=${switchAccount}&app_id=${NUVO_DAPP_ID}&return_url=${returnUrl}`;
-  //   location.href = loginUrl;
-  // }, [NUVO_DAPP_ID, NUVO_OAUTH, NUVO_API]);
+  const connectNuvo = React.useCallback(() => {
+    console.log('🌊', NUVO_API);
+    const returnUrl = encodeURIComponent(location.href);
+    const switchAccount = true;
+    const loginUrl = NUVO_OAUTH + `/#/oauth2-login?switch_account=${switchAccount}&app_id=${NUVO_DAPP_ID}&return_url=${returnUrl}`;
+    location.href = loginUrl;
+  }, [NUVO_DAPP_ID, NUVO_OAUTH, NUVO_API]);
 
   const connectWalletConnect = React.useCallback(() => {
     localStorage.removeItem('nuvo.register');
@@ -232,7 +233,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
           <ModalHeader>Connect Wallet</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {/* <Box
+            <Box
               onClick={connectNuvo}
               cursor="pointer"
               borderRadius="12px"
@@ -250,7 +251,7 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
               <Box fontSize="18px" fontWeight="700">
                 Nuvo Wallet
               </Box>
-            </Box> */}
+            </Box>
             <Box
               onClick={connectBitget}
               cursor="pointer"
