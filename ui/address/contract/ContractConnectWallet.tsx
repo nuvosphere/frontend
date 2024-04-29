@@ -1,13 +1,16 @@
 import { Alert, Button, Flex } from '@chakra-ui/react';
-import React from 'react';
+import React, { useState } from 'react';
 
 import useIsMobile from 'lib/hooks/useIsMobile';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import useWallet from 'ui/snippets/walletMenu/useWallet';
+import WalletDialog from 'ui/snippets/walletMenu/WalletDialog';
 
 const ContractConnectWallet = () => {
-  const { isModalOpening, isModalOpen, connect, disconnect, address, isWalletConnected } = useWallet({ source: 'Smart contracts' });
+  const { isModalOpening, disconnect, address, isWalletConnected } = useWallet({ source: 'Smart contracts' });
   const isMobile = useIsMobile();
+  const [showConnect, setShowConnect] = useState(false);
+  const openPopover = () => {}
 
   const content = (() => {
     if (!isWalletConnected) {
@@ -16,10 +19,10 @@ const ContractConnectWallet = () => {
           <span>Disconnected</span>
           <Button
             ml={ 3 }
-            onClick={ connect }
+            onClick={ () => setShowConnect(true) }
             size="sm"
             variant="outline"
-            isLoading={ isModalOpening || isModalOpen }
+            isLoading={ isModalOpening }
             loadingText="Connect wallet"
           >
               Connect wallet
@@ -44,7 +47,14 @@ const ContractConnectWallet = () => {
     );
   })();
 
-  return <Alert mb={ 6 } status={ address ? 'success' : 'warning' }>{ content }</Alert>;
+  return (
+    <>
+      <Alert mb={6} status={address ? 'success' : 'warning'}>
+        {content}
+      </Alert>
+      <WalletDialog showConnect={showConnect} setShowConnect={setShowConnect} openPopover={openPopover} />
+    </>
+  );
 };
 
 export default ContractConnectWallet;
