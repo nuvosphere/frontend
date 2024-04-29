@@ -38,6 +38,8 @@ const initProvider = () => {
       if (res.code === 200 && res.data.accessToken) {
         localStorage.setItem('AccessToken', res.data.accessToken);
         localStorage.setItem('RefreshToken', res.data.refreshToken);
+        // reload
+        initProvider()
       } else {
         console.error('login error:', res.msg);
       }

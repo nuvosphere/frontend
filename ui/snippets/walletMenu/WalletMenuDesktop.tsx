@@ -161,12 +161,11 @@ const WalletMenuDesktop = ({ isHomePage }: Props) => {
   }, [connectors, connect]);
 
   const connectNuvo = React.useCallback(() => {
-    console.log('🌊', NUVO_API);
     const returnUrl = encodeURIComponent(location.href);
     const switchAccount = true;
     const loginUrl = NUVO_OAUTH + `/#/oauth2-login?switch_account=${switchAccount}&app_id=${NUVO_DAPP_ID}&return_url=${returnUrl}`;
     location.href = loginUrl;
-  }, [NUVO_DAPP_ID, NUVO_OAUTH, NUVO_API]);
+  }, [NUVO_DAPP_ID, NUVO_OAUTH]);
 
   const connectWalletConnect = React.useCallback(() => {
     localStorage.removeItem('nuvo.register');
