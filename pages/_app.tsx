@@ -24,8 +24,6 @@ import Layout from 'ui/shared/layout/Layout';
 import Web3ModalProvider from 'ui/shared/Web3ModalProvider';
 
 import 'lib/setLocale';
-import { NuvoWalletContextProvider } from '../lib/contexts/nuvoWalletProvider';
-// import 'focus-visible/dist/focus-visible';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -68,9 +66,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
               <GrowthBookProvider growthbook={ growthBook }>
                 <ScrollDirectionProvider>
                   <SocketProvider url={ `${ config.api.socket }${ config.api.basePath }/socket/v2` }>
-                    <NuvoWalletContextProvider>
-                      { getLayout(<Component { ...pageProps }/>) }
-                    </NuvoWalletContextProvider>
+                    { getLayout(<Component { ...pageProps }/>) }
                   </SocketProvider>
                 </ScrollDirectionProvider>
               </GrowthBookProvider>
