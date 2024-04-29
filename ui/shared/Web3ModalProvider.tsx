@@ -39,7 +39,7 @@ const initProvider = () => {
         localStorage.setItem('AccessToken', res.data.accessToken);
         localStorage.setItem('RefreshToken', res.data.refreshToken);
         // reload
-        initProvider()
+        initProvider();
       } else {
         console.error('login error:', res.msg);
       }
@@ -59,7 +59,7 @@ const initProvider = () => {
           chainId: NUVO_CHAIN_ID,
         });
         const provider = new ethers.providers.Web3Provider(polisProvider);
-        console.log('🌊', provider, address);
+        window.Nuvo = { address, provider };
       } else {
         localStorage.removeItem('AccessToken');
         // Access token not existed

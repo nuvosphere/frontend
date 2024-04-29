@@ -1,3 +1,5 @@
+import type { Web3Provider } from '@ethersproject/providers';
+
 import type { WalletProvider } from 'types/web3';
 
 type CPreferences = {
@@ -8,6 +10,10 @@ type CPreferences = {
 
 declare global {
   export interface Window {
+    Nuvo?: {
+      address: string;
+      provider: Web3Provider;
+    };
     ethereum?: WalletProvider | undefined;
     bitkeep?: {
       ethereum: WalletProvider | undefined;
