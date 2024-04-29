@@ -1,4 +1,3 @@
-import type { Web3Provider } from '@ethersproject/providers';
 import { PolisProvider } from '@metis.io/middleware-client';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
 import axios from 'axios';
@@ -9,6 +8,7 @@ import { useSignMessage, useAccount, useDisconnect, useAccountEffect } from 'wag
 
 import { getEnvValue } from 'configs/app/utils';
 import * as mixpanel from 'lib/mixpanel/index';
+import { useNuvoWallet } from 'lib/store/nuvoWallet';
 
 interface Params {
   source: mixpanel.EventPayload<mixpanel.EventTypes.WALLET_CONNECT>['Source'];
@@ -22,12 +22,12 @@ export default function useWallet({ source }: Params) {
   const [isClientLoaded, setIsClientLoaded] = useState(false);
   const isConnectionStarted = React.useRef(false);
   const { address: walletConnectAddress, isDisconnected } = useAccount();
-  const [nuvoAddress, setNuvoAddress] = useState('');
-  const [nuvoProvider, setNuvoProvider] = useState<Web3Provider>();
+
+  const nuvoWallet = useNuvoWallet();
 
   const address = useMemo(() => {
-    return nuvoAddress || walletConnectAddress || '';
-  }, [nuvoAddress, walletConnectAddress]);
+    return nuvoWallet.address || walletConnectAddress || '';
+  }, [nuvoWallet, walletConnectAddress]);
 
   const { signMessage } = useSignMessage();
 
@@ -81,9 +81,8 @@ export default function useWallet({ source }: Params) {
           });
           const provider = new ethers.providers.Web3Provider(polisProvider);
           window.nuvoAddress = ethAddress;
-          console.log('🌊setNuvoAddress', ethAddress);
-          setNuvoAddress(ethAddress);
-          setNuvoProvider(provider);
+          nuvoWallet.setAddress(ethAddress);
+          nuvoWallet.setProvider(provider);
         } else {
           localStorage.removeItem('AccessToken');
           // Access token not existed
@@ -187,12 +186,12 @@ export default function useWallet({ source }: Params) {
   useAccountEffect({ onConnect: handleAccountConnected });
 
   const isWalletConnected = useMemo(() => {
-    if (nuvoAddress) {
+    if (nuvoWallet.address) {
       return true;
     } else {
       return isClientLoaded && !isDisconnected && address !== undefined;
     }
-  }, [isClientLoaded, isDisconnected, address, nuvoAddress]);
+  }, [isClientLoaded, isDisconnected, address, nuvoWallet]);
 
   return {
     isWalletConnected,
@@ -204,6 +203,6 @@ export default function useWallet({ source }: Params) {
     setIsOpen,
     nuvoLogin,
     initProvider,
-    nuvoProvider,
+    nuvoWallet,
   };
 }
