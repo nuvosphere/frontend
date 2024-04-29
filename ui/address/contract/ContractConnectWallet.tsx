@@ -31,7 +31,7 @@ const ContractConnectWallet = () => {
     return (
       <Flex columnGap={ 3 } rowGap={ 3 } alignItems={{ base: 'flex-start', lg: 'center' }} flexDir={{ base: 'column', lg: 'row' }}>
         <Flex alignItems="center">
-          <span>Connected to </span>
+          <span>Connected to</span>
           <AddressEntity
             address={{ hash: address }}
             truncation={ isMobile ? 'constant' : 'dynamic' }

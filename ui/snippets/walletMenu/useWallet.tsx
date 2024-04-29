@@ -180,8 +180,14 @@ export default function useWallet({ source }: Params) {
   );
 
   const handleDisconnect = React.useCallback(() => {
-    disconnect();
-  }, [disconnect]);
+    if (nuvoWallet.address) {
+      localStorage.removeItem('AccessToken')
+      localStorage.removeItem('RefreshToken')
+      location.reload()
+    } else {
+      disconnect();
+    }
+  }, [disconnect, nuvoWallet]);
 
   useAccountEffect({ onConnect: handleAccountConnected });
 
