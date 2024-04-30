@@ -1,4 +1,5 @@
 import React from 'react';
+// import React, { useEffect } from 'react';
 
 import type { Props } from './types';
 
@@ -7,9 +8,16 @@ import HeaderAlert from 'ui/snippets/header/HeaderAlert';
 import HeaderDesktop from 'ui/snippets/header/HeaderDesktop';
 import HeaderMobile from 'ui/snippets/header/HeaderMobile';
 
+// import useNuvoWallet from '../../snippets/walletMenu/useNuvoWallet';
 import * as Layout from './components';
 
 const LayoutDefault = ({ children }: Props) => {
+  // const { initProvider } = useNuvoWallet();
+
+  // useEffect(() => {
+  //   initProvider();
+  // }, []);
+
   return (
     <Layout.Container>
       <Layout.TopRow/>

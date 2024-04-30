@@ -7,12 +7,16 @@ interface NuvoWallet {
   setAddress: (v: string) => void;
   provider?: Web3Provider;
   setProvider: (v: Web3Provider) => void;
+  fetching: boolean;
+  setFetching: (v: boolean) => void;
 }
 
 // 创建 store
-export const useNuvoWallet = create<NuvoWallet>((set) => ({
+export const nuvoWalletSate = create<NuvoWallet>((set) => ({
   address: '',
   setAddress: (v: string) => set({ address: v }),
   provider: undefined,
   setProvider: (v: Web3Provider) => set({ provider: v }),
+  fetching: false,
+  setFetching: (v: boolean) => set({ fetching: v }),
 }));

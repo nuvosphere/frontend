@@ -1,14 +1,15 @@
 import { Icon, Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react';
+import Image from 'next/image'
 import React from 'react';
 import { useConnect } from 'wagmi';
 
-import { getEnvValue } from 'configs/app/utils';
+// import { getEnvValue } from 'configs/app/utils';
 // eslint-disable-next-line no-restricted-imports
-import BitgetLogo from 'icons/wallets/Bitget.svg';
+import BitgetLogo from 'icons/wallets/Bitget.png';
 // eslint-disable-next-line no-restricted-imports
 import MetaMaskLogo from 'icons/wallets/metamask.svg';
 // eslint-disable-next-line no-restricted-imports
-import NuvoLogo from 'icons/wallets/Nuvo.svg';
+// import NuvoLogo from 'icons/wallets/Nuvo.svg';
 // eslint-disable-next-line no-restricted-imports
 import WalletConnectLogo from 'icons/wallets/WalletConnect.svg';
 import useWallet from 'ui/snippets/walletMenu/useWallet';
@@ -24,8 +25,8 @@ const WalletDialog = ({ showConnect, setShowConnect, openPopover }: Props) => {
   const { isWalletConnected, connect: walletConnect } = useWallet({ source: 'Header' });
   const { connect, connectors } = useConnect();
 
-  const NUVO_DAPP_ID = getEnvValue('NEXT_PUBLIC_NUVO_DAPP_ID'); // admin testnet app id
-  const NUVO_OAUTH = getEnvValue('NEXT_PUBLIC_NUVO_OAUTH');
+  // const NUVO_DAPP_ID = getEnvValue('NEXT_PUBLIC_NUVO_DAPP_ID'); // admin testnet app id
+  // const NUVO_OAUTH = getEnvValue('NEXT_PUBLIC_NUVO_OAUTH');
 
   const connectBitget = React.useCallback(async () => {
     localStorage.removeItem('nuvo.register');
@@ -47,12 +48,12 @@ const WalletDialog = ({ showConnect, setShowConnect, openPopover }: Props) => {
     }
   }, [connectors, connect]);
 
-  const connectNuvo = React.useCallback(() => {
-    const returnUrl = encodeURIComponent(location.href);
-    const switchAccount = true;
-    const loginUrl = NUVO_OAUTH + `/#/oauth2-login?switch_account=${switchAccount}&app_id=${NUVO_DAPP_ID}&return_url=${returnUrl}`;
-    location.href = loginUrl;
-  }, [NUVO_DAPP_ID, NUVO_OAUTH]);
+  // const connectNuvo = React.useCallback(() => {
+  //   const returnUrl = encodeURIComponent(location.href);
+  //   const switchAccount = true;
+  //   const loginUrl = NUVO_OAUTH + `/#/oauth2-login?switch_account=${switchAccount}&app_id=${NUVO_DAPP_ID}&return_url=${returnUrl}`;
+  //   location.href = loginUrl;
+  // }, [NUVO_DAPP_ID, NUVO_OAUTH]);
 
   const connectWalletConnect = React.useCallback(() => {
     localStorage.removeItem('nuvo.register');
@@ -80,32 +81,32 @@ const WalletDialog = ({ showConnect, setShowConnect, openPopover }: Props) => {
         <ModalHeader>Connect Wallet</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Box
-            onClick={connectNuvo}
-            cursor="pointer"
-            borderRadius="12px"
-            border="1px"
-            borderColor="#E9E9E9"
-            background="#FCFCFC"
-            display="flex"
-            alignItems="center"
-            gap="30px"
-            paddingX="30px"
-            paddingY="10px"
-            marginBottom="30px"
-          >
-            <Icon as={NuvoLogo} boxSize={12} />
-            <Box fontSize="18px" fontWeight="700">
-              Nuvo Wallet
-            </Box>
-          </Box>
+          {/*<Box*/}
+          {/*  onClick={connectNuvo}*/}
+          {/*  cursor="pointer"*/}
+          {/*  borderRadius="12px"*/}
+          {/*  border="1px"*/}
+          {/*  borderColor="#E9E9E9"*/}
+          {/*  background="#FCFCFC"*/}
+          {/*  display="flex"*/}
+          {/*  alignItems="center"*/}
+          {/*  gap="30px"*/}
+          {/*  paddingX="30px"*/}
+          {/*  paddingY="10px"*/}
+          {/*  marginBottom="30px"*/}
+          {/*>*/}
+          {/*  <Icon as={NuvoLogo} boxSize={12} />*/}
+          {/*  <Box fontSize="18px" fontWeight="700">*/}
+          {/*    Nuvo Wallet*/}
+          {/*  </Box>*/}
+          {/*</Box>*/}
           <Box
             onClick={connectBitget}
             cursor="pointer"
             borderRadius="12px"
             border="1px"
-            borderColor="#E9E9E9"
-            background="#FCFCFC"
+            borderColor="var(--chakra-colors-gray-200)"
+            background="var(--chakra-colors-transparent)"
             display="flex"
             alignItems="center"
             gap="30px"
@@ -114,7 +115,8 @@ const WalletDialog = ({ showConnect, setShowConnect, openPopover }: Props) => {
             marginBottom="30px"
           >
             <Box width={12} height={12}>
-              <BitgetLogo />
+              {/*<BitgetLogo />*/}
+              <Image src={BitgetLogo} alt="bitget" />
             </Box>
             <Box fontSize="18px" fontWeight="700">
               Bitget Wallet
@@ -125,8 +127,8 @@ const WalletDialog = ({ showConnect, setShowConnect, openPopover }: Props) => {
             cursor="pointer"
             borderRadius="12px"
             border="1px"
-            borderColor="#E9E9E9"
-            background="#FCFCFC"
+            borderColor="var(--chakra-colors-gray-200)"
+            background="var(--chakra-colors-transparent)"
             display="flex"
             alignItems="center"
             gap="30px"
@@ -146,8 +148,8 @@ const WalletDialog = ({ showConnect, setShowConnect, openPopover }: Props) => {
             cursor="pointer"
             borderRadius="12px"
             border="1px"
-            borderColor="#E9E9E9"
-            background="#FCFCFC"
+            borderColor="var(--chakra-colors-gray-200)"
+            background="var(--chakra-colors-transparent)"
             display="flex"
             alignItems="center"
             gap="30px"

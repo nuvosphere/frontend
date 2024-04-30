@@ -1,6 +1,6 @@
 import type { ButtonProps } from '@chakra-ui/react';
 import { Popover, PopoverContent, PopoverBody, PopoverTrigger, Button, Box, useBoolean } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import useIsMobile from 'lib/hooks/useIsMobile';
 import * as mixpanel from 'lib/mixpanel/index';
@@ -10,6 +10,7 @@ import useWallet from 'ui/snippets/walletMenu/useWallet';
 import WalletMenuContent from 'ui/snippets/walletMenu/WalletMenuContent';
 
 import useMenuButtonColors from '../useMenuButtonColors';
+import useNuvoWallet from './useNuvoWallet';
 import WalletDialog from './WalletDialog';
 import WalletTooltip from './WalletTooltip';
 
@@ -18,16 +19,12 @@ type Props = {
 };
 
 const WalletMenuDesktop = ({ isHomePage }: Props) => {
-  const { isWalletConnected, address, disconnect, isModalOpening, nuvoLogin, initProvider } = useWallet({ source: 'Header' });
+  const { isWalletConnected, address, disconnect, isModalOpening } = useWallet({ source: 'Header' });
+  const { nuvoLogin } = useNuvoWallet()
   const { themedBackground, themedBorderColor, themedColor } = useMenuButtonColors();
   const [isPopoverOpen, setIsPopoverOpen] = useBoolean(false);
   const isMobile = useIsMobile();
   const [showConnect, setShowConnect] = useState(false);
-
-  useEffect(() => {
-    initProvider();
-  }, [initProvider]);
-
   const openPopover = React.useCallback(() => {
     mixpanel.logEvent(mixpanel.EventTypes.WALLET_ACTION, { Action: 'Open' });
     setIsPopoverOpen.on();
