@@ -1,4 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import React from 'react';
 
 import type { Route } from 'nextjs-routes';
@@ -10,7 +11,8 @@ import fetchApi from 'nextjs/utils/fetchApi';
 
 import config from 'configs/app';
 import getQueryParamString from 'lib/router/getQueryParamString';
-import Token from 'ui/pages/Token';
+
+const Token = dynamic(() => import('ui/pages/Token'), { ssr: false });
 
 const pathname: Route['pathname'] = '/token/[hash]';
 
@@ -27,18 +29,19 @@ export default Page;
 export const getServerSideProps: GetServerSideProps<Props<typeof pathname>> = async(ctx) => {
   const baseResponse = await gSSP.base<typeof pathname>(ctx);
 
-  if ('props' in baseResponse) {
-    if (
-      config.meta.seo.enhancedDataEnabled ||
-      (config.meta.og.enhancedDataEnabled && detectBotRequest(ctx.req)?.type === 'social_preview')
-    ) {
+  if (config.meta.og.enhancedDataEnabled && 'props' in baseResponse) {
+    const botInfo = detectBotRequest(ctx.req);
+
+    if (botInfo?.type === 'social_preview') {
       const tokenData = await fetchApi({
         resource: 'token',
         pathParams: { hash: getQueryParamString(ctx.query.hash) },
-        timeout: 500,
+        timeout: 1_000,
       });
 
-      (await baseResponse.props).apiData = tokenData ?? null;
+      (await baseResponse.props).apiData = tokenData && tokenData.symbol ? {
+        symbol: tokenData.symbol,
+      } : null;
     }
   }
 
