@@ -17,10 +17,6 @@ const Withdrawals = dynamic(() => {
     return import('ui/pages/ShibariumWithdrawals');
   }
 
-  if (rollupFeature.isEnabled && rollupFeature.type === 'zkEvm') {
-    return import('ui/pages/ZkEvmL2Withdrawals');
-  }
-
   if (beaconChainFeature.isEnabled) {
     return import('ui/pages/BeaconChainWithdrawals');
   }
