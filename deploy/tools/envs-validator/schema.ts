@@ -25,6 +25,7 @@ import type { ValidatorsChainType } from '../../../types/client/validators';
 import type { WalletType } from '../../../types/client/wallets';
 import { SUPPORTED_WALLETS } from '../../../types/client/wallets';
 import type { CustomLink, CustomLinksGroup } from '../../../types/footerLinks';
+import { CHAIN_INDICATOR_IDS } from '../../../types/homepage';
 import type { ChainIndicatorId } from '../../../types/homepage';
 import { type NetworkVerificationType, type NetworkExplorer, type FeaturedNetwork, NETWORK_GROUPS } from '../../../types/networks';
 import type { AddressViewId } from '../../../types/views/address';
@@ -193,6 +194,30 @@ const marketplaceSchema = yup
         then: (schema) => schema,
         // eslint-disable-next-line max-len
         otherwise: (schema) => schema.max(-1, 'NEXT_PUBLIC_MARKETPLACE_SECURITY_REPORTS_URL cannot not be used without NEXT_PUBLIC_MARKETPLACE_ENABLED'),
+      }),
+    NEXT_PUBLIC_MARKETPLACE_FEATURED_APP: yup
+      .string()
+      .when('NEXT_PUBLIC_MARKETPLACE_ENABLED', {
+        is: true,
+        then: (schema) => schema,
+        // eslint-disable-next-line max-len
+        otherwise: (schema) => schema.max(-1, 'NEXT_PUBLIC_MARKETPLACE_FEATURED_APP cannot not be used without NEXT_PUBLIC_MARKETPLACE_ENABLED'),
+      }),
+    NEXT_PUBLIC_MARKETPLACE_BANNER_CONTENT_URL: yup
+      .string()
+      .when('NEXT_PUBLIC_MARKETPLACE_ENABLED', {
+        is: true,
+        then: (schema) => schema.test(urlTest),
+        // eslint-disable-next-line max-len
+        otherwise: (schema) => schema.max(-1, 'NEXT_PUBLIC_MARKETPLACE_BANNER_CONTENT_URL cannot not be used without NEXT_PUBLIC_MARKETPLACE_ENABLED'),
+      }),
+    NEXT_PUBLIC_MARKETPLACE_BANNER_LINK_URL: yup
+      .string()
+      .when('NEXT_PUBLIC_MARKETPLACE_ENABLED', {
+        is: true,
+        then: (schema) => schema.test(urlTest),
+        // eslint-disable-next-line max-len
+        otherwise: (schema) => schema.max(-1, 'NEXT_PUBLIC_MARKETPLACE_BANNER_LINK_URL cannot not be used without NEXT_PUBLIC_MARKETPLACE_ENABLED'),
       }),
   });
 
@@ -457,7 +482,7 @@ const schema = yup
     NEXT_PUBLIC_NETWORK_CURRENCY_WEI_NAME: yup.string(),
     NEXT_PUBLIC_NETWORK_CURRENCY_SYMBOL: yup.string(),
     NEXT_PUBLIC_NETWORK_CURRENCY_DECIMALS: yup.number().integer().positive(),
-    NEXT_PUBLIC_NETWORK_GOVERNANCE_TOKEN_SYMBOL: yup.string(),
+    NEXT_PUBLIC_NETWORK_SECONDARY_COIN_SYMBOL: yup.string(),
     NEXT_PUBLIC_NETWORK_VERIFICATION_TYPE: yup.string<NetworkVerificationType>().oneOf([ 'validation', 'mining' ]),
     NEXT_PUBLIC_IS_TESTNET: yup.boolean(),
 
@@ -474,7 +499,7 @@ const schema = yup
       .array()
       .transform(replaceQuotes)
       .json()
-      .of(yup.string<ChainIndicatorId>().oneOf([ 'daily_txs', 'coin_price', 'market_cap', 'tvl' ])),
+      .of(yup.string<ChainIndicatorId>().oneOf(CHAIN_INDICATOR_IDS)),
     NEXT_PUBLIC_HOMEPAGE_PLATE_TEXT_COLOR: yup.string(),
     NEXT_PUBLIC_HOMEPAGE_PLATE_BACKGROUND: yup.string(),
     NEXT_PUBLIC_HOMEPAGE_SHOW_AVG_BLOCK_TIME: yup.boolean(),
@@ -553,9 +578,12 @@ const schema = yup
     // 5. Features configuration
     NEXT_PUBLIC_API_SPEC_URL: yup.string().test(urlTest),
     NEXT_PUBLIC_STATS_API_HOST: yup.string().test(urlTest),
+    NEXT_PUBLIC_STATS_API_BASE_PATH: yup.string(),
     NEXT_PUBLIC_VISUALIZE_API_HOST: yup.string().test(urlTest),
+    NEXT_PUBLIC_VISUALIZE_API_BASE_PATH: yup.string(),
     NEXT_PUBLIC_CONTRACT_INFO_API_HOST: yup.string().test(urlTest),
     NEXT_PUBLIC_NAME_SERVICE_API_HOST: yup.string().test(urlTest),
+    NEXT_PUBLIC_METADATA_SERVICE_API_HOST: yup.string().test(urlTest),
     NEXT_PUBLIC_GRAPHIQL_TRANSACTION: yup.string().matches(regexp.HEX_REGEXP),
     NEXT_PUBLIC_WEB3_WALLETS: yup
       .mixed()
@@ -575,6 +603,8 @@ const schema = yup
     NEXT_PUBLIC_PROMOTE_BLOCKSCOUT_IN_TITLE: yup.boolean(),
     NEXT_PUBLIC_OG_DESCRIPTION: yup.string(),
     NEXT_PUBLIC_OG_IMAGE_URL: yup.string().test(urlTest),
+    NEXT_PUBLIC_OG_ENHANCED_DATA_ENABLED: yup.boolean(),
+    NEXT_PUBLIC_SEO_ENHANCED_DATA_ENABLED: yup.boolean(),
     NEXT_PUBLIC_SAFE_TX_SERVICE_URL: yup.string().test(urlTest),
     NEXT_PUBLIC_IS_SUAVE_CHAIN: yup.boolean(),
     NEXT_PUBLIC_HAS_USER_OPS: yup.boolean(),

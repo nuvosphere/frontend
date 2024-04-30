@@ -1,4 +1,4 @@
-import { Box, Center, useColorMode } from '@chakra-ui/react';
+import { Box, Center, useColorMode, Flex } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { DappscoutIframeProvider, useDappscoutIframe } from 'dappscout-iframe';
 import { useRouter } from 'next/router';
@@ -11,6 +11,7 @@ import { route } from 'nextjs-routes';
 import config from 'configs/app';
 import type { ResourceError } from 'lib/api/resources';
 import useApiFetch from 'lib/api/useApiFetch';
+import { useMarketplaceContext } from 'lib/contexts/marketplace';
 import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
 import useFetch from 'lib/hooks/useFetch';
 import * as metadata from 'lib/metadata';
@@ -71,7 +72,7 @@ const MarketplaceAppContent = ({ address, data, isPending }: Props) => {
 
   return (
     <Center
-      h="100vh"
+      flexGrow={ 1 }
       mx={{ base: -4, lg: -6 }}
     >
       { (isFrameLoading) && (
@@ -129,6 +130,7 @@ const MarketplaceApp = () => {
     enabled: feature.isEnabled,
   });
   const { data, isPending } = query;
+  const { setIsAutoConnectDisabled } = useMarketplaceContext();
 
   useEffect(() => {
     if (data) {
@@ -136,17 +138,17 @@ const MarketplaceApp = () => {
         { pathname: '/apps/[id]', query: { id: data.id } },
         { app_name: data.title },
       );
+      setIsAutoConnectDisabled(!data.internalWallet);
     }
-  }, [ data ]);
+  }, [ data, setIsAutoConnectDisabled ]);
 
   throwOnResourceLoadError(query);
 
   return (
-    <>
+    <Flex flexDirection="column" h="100%">
       <MarketplaceAppTopBar
         data={ data }
         isLoading={ isPending || isSecurityReportsLoading }
-        isWalletConnected={ Boolean(address) }
         securityReport={ securityReports?.[id] }
       />
       <DappscoutIframeProvider
@@ -159,7 +161,7 @@ const MarketplaceApp = () => {
       >
         <MarketplaceAppContent address={ address } data={ data } isPending={ isPending }/>
       </DappscoutIframeProvider>
-    </>
+    </Flex>
   );
 };
 

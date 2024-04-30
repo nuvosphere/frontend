@@ -55,20 +55,20 @@ const MarketplaceAppModal = ({
 
   const socialLinks = [
     telegram ? {
-      icon: 'social/telega' as IconName,
+      icon: 'social/telegram_filled' as IconName,
       url: telegram,
     } : null,
     twitter ? {
-      icon: 'social/tweet' as IconName,
+      icon: 'social/twitter_filled' as IconName,
       url: twitter,
     } : null,
   ].filter(Boolean);
 
   if (github) {
     if (Array.isArray(github)) {
-      github.forEach((url) => socialLinks.push({ icon: 'social/git', url }));
+      github.forEach((url) => socialLinks.push({ icon: 'social/github_filled', url }));
     } else {
-      socialLinks.push({ icon: 'social/git', url: github });
+      socialLinks.push({ icon: 'social/github_filled', url: github });
     }
   }
 
@@ -98,6 +98,12 @@ const MarketplaceAppModal = ({
   const isMobile = useIsMobile();
   const logoUrl = useColorModeValue(logo, logoDarkMode || logo);
 
+  function getHostname(url: string | undefined) {
+    try {
+      return new URL(url || '').hostname;
+    } catch (err) {}
+  }
+
   return (
     <Modal
       isOpen={ Boolean(data.id) }
@@ -125,6 +131,7 @@ const MarketplaceAppModal = ({
             <Image
               src={ logoUrl }
               alt={ `${ title } app icon` }
+              borderRadius="md"
             />
           </Flex>
 
@@ -259,7 +266,7 @@ const MarketplaceAppModal = ({
                 overflow="hidden"
                 textOverflow="ellipsis"
               >
-                { site }
+                { getHostname(site) }
               </Text>
             </Link>
           ) }
@@ -289,6 +296,7 @@ const MarketplaceAppModal = ({
                     w="20px"
                     h="20px"
                     display="block"
+                    color="text_secondary"
                   />
                 </Link>
               )) }
