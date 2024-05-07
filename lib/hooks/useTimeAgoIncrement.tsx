@@ -42,9 +42,7 @@ function getUpdateParams(ts: string) {
 }
 
 export default function useTimeAgoIncrement(ts: string | null, isEnabled?: boolean) {
-  // TODO fix dayjs(ts).fromNow
-  // const [ value, setValue ] = React.useState(ts ? dayjs(ts).fromNow() : null);
-  const [value, setValue] = React.useState(null)
+  const [ value, setValue ] = React.useState(ts ? dayjs(ts).fromNow() : null);
 
   React.useEffect(() => {
     if (ts !== null) {
